@@ -90,7 +90,7 @@ class ServerTestCase(unittest.TestCase):
         self.assertTrue(r.status_code == 200, "Code not 200!")
         newworld = json.loads(utf8(r.data))
         for key in self.world:
-            self.assertTrue(self.world[key]  == newworld[key], "Key %s" % key)
+            self.assertTrue(self.world[key]  == newworld[key], "Key %s" % key) 
 
 
         

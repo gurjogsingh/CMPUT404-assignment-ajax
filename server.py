@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# Copyright 2013 Abram Hindle
+# Copyright 2022 Gurjog Singh, 2013 Abram Hindle
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 
 import flask
 from flask import Flask, request
+from flask_restful import reqparse
 import json
 app = Flask(__name__)
 app.debug = True
@@ -41,12 +42,15 @@ class World:
         entry = self.space.get(entity,dict())
         entry[key] = value
         self.space[entity] = entry
+        #return self.space[entity]
 
     def set(self, entity, data):
         self.space[entity] = data
+        return self.space[entity]
 
     def clear(self):
         self.space = dict()
+        return self.space
 
     def get(self, entity):
         return self.space.get(entity,dict())
@@ -74,27 +78,45 @@ def flask_post_json():
 @app.route("/")
 def hello():
     '''Return something coherent here.. perhaps redirect to /static/index.html '''
-    return None
+    #return None
+    #return flask.redirect("http://127.0.0.1:5000/static/index.html")
+    return flask.redirect("/static/index.html")
 
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    return None
-
+    #if entity doesnt exist, then post
+    #if entity exists, then put
+    data = flask_post_json()
+    if request.method == "POST":
+        return myWorld.set(entity, data)
+    elif request.method == "PUT":
+        key_list = list(data.keys())
+        value_list = list(data.values())
+        if len(key_list) == 4:
+            return myWorld.set(entity, data)
+        else:
+            for i in range(0, len(key_list)):
+                myWorld.update(entity, key_list[i], value_list[i])
+            return myWorld.get(entity)
+        
+        
 @app.route("/world", methods=['POST','GET'])    
 def world():
     '''you should probably return the world here'''
-    return None
+    #return None
+    return myWorld.world()
 
 @app.route("/entity/<entity>")    
 def get_entity(entity):
     '''This is the GET version of the entity interface, return a representation of the entity'''
-    return None
+    return myWorld.get(entity)
 
 @app.route("/clear", methods=['POST','GET'])
 def clear():
     '''Clear the world out!'''
-    return None
+    #return None
+    return myWorld.clear()
 
 if __name__ == "__main__":
     app.run()
