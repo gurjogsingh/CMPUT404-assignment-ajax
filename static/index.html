@@ -49,7 +49,7 @@ button.onclick = function (event){
 
     xhr.onload = function() {
         if (xhr.status == 200) {
-                console.log(this.response)
+                //console.log(this.response)
         }
     }
     xhr.send()
@@ -64,7 +64,7 @@ function sendJSONXMLHTTPRequest(url, objects, callback) {
             try {
                 if (xhr.status==200) {
                     let response = JSON.parse(this.response);
-                    console.log(respose);
+                    //console.log(respose);
                     //XXX: parse some JSON from the request!
                     //XXX: Pass the data to the callback!
                 }
@@ -124,7 +124,7 @@ function clearFrame() {
 	//fillStyle = "#000";
 	//fillRect(0,0,W,H);
     }
-    console.log("pass");
+    //console.log("pass");
 
 }
 
@@ -180,13 +180,13 @@ function addEntity(entity, data) {
     var xhr = new XMLHttpRequest();
     xhr.open("PUT", '/entity/' + entity, true)
 
-    //https://stackoverflow.com/questions/9713058/send-post-data-using-xmlhttprequest
+    //how to send header using XMLHttpRequest - https://stackoverflow.com/a/9713078 (CC-BY-SA 4.0, Ed Heal and rkachach)
     xhr.setRequestHeader('Content-type', 'application/json');
     xhr.setRequestHeader('Accept', 'application/json');
     //XXX: POST to a URL
     //XXX: set the mimetype and the accept headers!
     // Remember to use application/json !
-    console.log("DATA: ", data);
+    //console.log("DATA: ", data);
     xhr.send(JSON.stringify(data));
 
 }
@@ -194,7 +194,7 @@ function addEntity(entity, data) {
 var counter = 0;
 function addEntityWithoutName(data) {
     //var name = "X"+Math.floor((Math.random()*100)+1);
-    var name = "X"+(counter++)%500;
+    var name = "X"+(counter++)%100;
     addEntity(name,data);
 }
 
@@ -315,21 +315,19 @@ function update() {
     drawFrame();
     let xhr = new XMLHttpRequest();
     let url = location.host;
-    console.log("YOURL: ", url);
+    //console.log("YOURL: ", url);
     xhr.open('GET', '/world', true);
 
     xhr.onload = function() {
         if (xhr.status == 200) {
             if (JSON.parse(this.response) !== undefined){
                 world = JSON.parse(this.response)
-                console.log("WORLD: ",world)
             }  
         }
     }
     xhr.send()
     if (JSON.stringify(world).length === 2){
         clearFrame();
-        console.log("CLEARED IT BITCH")
     }
     renderFrame()
 }
